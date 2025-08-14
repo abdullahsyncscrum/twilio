@@ -94,17 +94,29 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       getToken: async (user_identity, room_name) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
-        return fetch(endpoint, {
+        console.log('End point ', endpoint);
+
+        return fetch('https://coach-backend-stagging.up.railway.app/v1/meeting/join', {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
           },
           body: JSON.stringify({
-            user_identity,
-            room_name,
-            create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
+            token: user_identity,
           }),
         }).then(res => res.json());
+
+        // return fetch("https://coach-backend-stagging.up.railway.app/v1/meeting/join", {
+        //   method: 'POST',
+        //   headers: {
+        //     'content-type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     user_identity,
+        //     room_name,
+        //     create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
+        //   }),
+        // }).then(res => res.json());
       },
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
