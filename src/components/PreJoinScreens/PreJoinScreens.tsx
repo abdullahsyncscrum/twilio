@@ -18,6 +18,14 @@ export default function PreJoinScreens() {
   const { URLRoomName } = useParams<{ URLRoomName?: string }>();
   const [step, setStep] = useState(Steps.roomNameStep);
 
+  const [token, setToken] = useState<string | null>('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token'); // get ?token=...
+    setToken(token);
+  }, []);
+
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
 
@@ -55,7 +63,7 @@ export default function PreJoinScreens() {
   return (
     <IntroContainer>
       <MediaErrorSnackbar error={mediaError} />
-      {step === Steps.roomNameStep && (
+      {/* {step === Steps.roomNameStep && (
         <RoomNameScreen
           name={name}
           roomName={roomName}
@@ -63,11 +71,12 @@ export default function PreJoinScreens() {
           setRoomName={setRoomName}
           handleSubmit={handleSubmit}
         />
-      )}
+      )} */}
 
-      {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} />
-      )}
+      {token && <DeviceSelectionScreen name={token as string} roomName={'meeting'} setStep={setStep} />}
+
+      {/* {step === Steps.deviceSelectionStep && (
+      )} */}
     </IntroContainer>
   );
 }
