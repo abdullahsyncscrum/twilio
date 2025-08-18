@@ -12,6 +12,8 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
   const { localTracks } = useVideoContext();
   const hasAudioTrack = localTracks.some(track => track.kind === 'audio');
 
+  console.log('Is Audo enabled ', isAudioEnabled, localTracks, hasAudioTrack);
+
   return (
     <Button
       className={props.className}

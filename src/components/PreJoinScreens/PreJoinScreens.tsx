@@ -60,10 +60,30 @@ export default function PreJoinScreens() {
     setStep(Steps.deviceSelectionStep);
   };
 
+  console.log('Token ', token);
+
   return (
+    // <IntroContainer>
+    //   <MediaErrorSnackbar error={mediaError} />
+    //   {/* {step === Steps.roomNameStep && (
+    //     <RoomNameScreen
+    //       name={name}
+    //       roomName={roomName}
+    //       setName={setName}
+    //       setRoomName={setRoomName}
+    //       handleSubmit={handleSubmit}
+    //     />
+    //   )} */}
+
+    //   {token && <DeviceSelectionScreen name={token as string} roomName={'meeting'} setStep={setStep} />}
+
+    //   {/* {step === Steps.deviceSelectionStep && (
+    //   )} */}
+    // </IntroContainer>
+
     <IntroContainer>
       <MediaErrorSnackbar error={mediaError} />
-      {/* {step === Steps.roomNameStep && (
+      {step === Steps.roomNameStep && (
         <RoomNameScreen
           name={name}
           roomName={roomName}
@@ -71,12 +91,11 @@ export default function PreJoinScreens() {
           setRoomName={setRoomName}
           handleSubmit={handleSubmit}
         />
-      )} */}
+      )}
 
-      {token && <DeviceSelectionScreen name={token as string} roomName={'meeting'} setStep={setStep} />}
-
-      {/* {step === Steps.deviceSelectionStep && (
-      )} */}
+      {step === Steps.deviceSelectionStep && (
+        <DeviceSelectionScreen token={token as string} name={name} roomName={roomName} setStep={setStep} />
+      )}
     </IntroContainer>
   );
 }
