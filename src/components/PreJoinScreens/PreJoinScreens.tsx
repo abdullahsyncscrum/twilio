@@ -29,6 +29,8 @@ export default function PreJoinScreens() {
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
 
+  const [twilioToken, setTwilioToken] = useState<string>('');
+
   const [mediaError, setMediaError] = useState<Error>();
 
   useEffect(() => {
@@ -63,24 +65,6 @@ export default function PreJoinScreens() {
   console.log('Token ', token);
 
   return (
-    // <IntroContainer>
-    //   <MediaErrorSnackbar error={mediaError} />
-    //   {/* {step === Steps.roomNameStep && (
-    //     <RoomNameScreen
-    //       name={name}
-    //       roomName={roomName}
-    //       setName={setName}
-    //       setRoomName={setRoomName}
-    //       handleSubmit={handleSubmit}
-    //     />
-    //   )} */}
-
-    //   {token && <DeviceSelectionScreen name={token as string} roomName={'meeting'} setStep={setStep} />}
-
-    //   {/* {step === Steps.deviceSelectionStep && (
-    //   )} */}
-    // </IntroContainer>
-
     <IntroContainer>
       <MediaErrorSnackbar error={mediaError} />
       {step === Steps.roomNameStep && (
@@ -89,12 +73,13 @@ export default function PreJoinScreens() {
           roomName={roomName}
           setName={setName}
           setRoomName={setRoomName}
+          setTwilioToken={setTwilioToken}
           handleSubmit={handleSubmit}
         />
       )}
 
       {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen token={token as string} name={name} roomName={roomName} setStep={setStep} />
+        <DeviceSelectionScreen name={name} roomName={roomName} token={twilioToken} setStep={setStep} />
       )}
     </IntroContainer>
   );

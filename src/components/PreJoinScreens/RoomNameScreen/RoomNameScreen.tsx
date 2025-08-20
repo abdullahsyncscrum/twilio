@@ -1,6 +1,7 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect } from 'react';
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 import { useAppState } from '../../../state';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -32,10 +33,18 @@ interface RoomNameScreenProps {
   roomName: string;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
+  setTwilioToken: (token: string) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
+export default function RoomNameScreen({
+  name,
+  roomName,
+  setName,
+  setRoomName,
+  setTwilioToken,
+  handleSubmit,
+}: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
 
@@ -48,6 +57,39 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get('token');
+
+  const joinMeeting = async (): Promise<void> => {
+    if (!token) return;
+    try {
+      const response = await fetch('https://coach-backend-stagging.up.railway.app/v1/meeting/join', {
+        method: 'POST',
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: token }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch clients');
+      }
+
+      const data = await response.json();
+      // Assuming the API returns a list of client emails as an array
+      console.log('Array ', data?.roomName);
+      setRoomName(data?.roomName);
+      setTwilioToken(data?.token);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    joinMeeting();
+  }, [token]);
 
   return (
     <>
@@ -76,7 +118,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               />
             </div>
           )}
-          <div className={classes.textFieldContainer}>
+          {/* <div className={classes.textFieldContainer}>
             <InputLabel shrink htmlFor="input-room-name">
               Room Name
             </InputLabel>
@@ -89,7 +131,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               value={roomName}
               onChange={handleRoomNameChange}
             />
-          </div>
+          </div> */}
         </div>
         <Grid container justifyContent="flex-end">
           <Button

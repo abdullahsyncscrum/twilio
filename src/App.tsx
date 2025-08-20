@@ -10,6 +10,8 @@ import Room from './components/Room/Room';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
+import AddClient from './components/AddClient/AddClient';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled('div')({
   display: 'grid',
@@ -28,6 +30,13 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 export default function App() {
   const roomState = useRoomState();
 
+  console.log('Room State ->> ', roomState);
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get('token');
+
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
   // not the viewport. This looks bad when the mobile browsers location bar is open.
@@ -37,7 +46,9 @@ export default function App() {
 
   return (
     <Container style={{ height }}>
-      {roomState === 'disconnected' ? (
+      {!token ? (
+        <AddClient />
+      ) : roomState === 'disconnected' ? (
         <PreJoinScreens />
       ) : (
         <Main>
@@ -48,6 +59,8 @@ export default function App() {
           <MenuBar />
         </Main>
       )}
+
+      {/* Render the rest of the screen based on roomState */}
     </Container>
   );
 }
